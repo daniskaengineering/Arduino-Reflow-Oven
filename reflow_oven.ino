@@ -1,6 +1,5 @@
 /*
   Reflow_Oven
-  runs reflow cycle for toaster oven.
 
   created 16 June 2015
   by Taylor Daniska
