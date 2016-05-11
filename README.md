@@ -16,6 +16,7 @@ Can be used with a toaster oven to create a solder reflow oven with reflow curve
 
 ## History
 v1.0 Initial Release
+v2.0 Complete firmware redesign
 
 ## Credits
 Taylor Daniska
