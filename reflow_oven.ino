@@ -1,7 +1,7 @@
 /*
   Reflow_Oven
   
-  v1.1
+  v2.0
 
   created 10 May 2016
   by Taylor Daniska
