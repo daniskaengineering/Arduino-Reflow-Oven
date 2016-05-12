@@ -1,13 +1,12 @@
 /*
   Reflow_Oven
   
-  v2.1
+  v2.2
 
   created 10 May 2016
   by Taylor Daniska
  */
- 
-//MENWIZ ESAMPLE
+
 #include <Wire.h>
 #include <LCD.h>
 #include <LiquidCrystal_I2C.h>
@@ -87,9 +86,8 @@ void setup(){
   
    
 
-  r=menu.addMenu(MW_ROOT,NULL,F("Main Menu"));              //create a root menu at first (required)
-                                                         //...associated to the terminal node and bind it to the app variable "bb" of type boolean
-                                                         
+  r=menu.addMenu(MW_ROOT,NULL,F("Main Menu"));          
+
     s1=menu.addMenu(MW_VAR,r,F("Reflow"));              
       s1->addVar(MW_ACTION,reflow);                         
       s1->setBehaviour(MW_ACTION_CONFIRM,false);
@@ -106,7 +104,7 @@ void setup(){
       s1->addVar(MW_ACTION,get_temp);                    
       s1->setBehaviour(MW_ACTION_CONFIRM,false);
 
-    s1=menu.addMenu(MW_SUBMENU,r,F("Settings"));     //add a child (submenu) node to the root menu
+    s1=menu.addMenu(MW_SUBMENU,r,F("Settings"));  
     
       s2=menu.addMenu(MW_VAR,s1,F("Dwell Temp"));        
         s2->addVar(MW_AUTO_INT,&temp_dwell,100,500,10); 
@@ -148,7 +146,7 @@ void setup(){
 
 void loop(){
   menu.draw(); 
-  //PUT APPLICATION CODE HERE (if any)
+
   }
  
 //================================================== Save Var =====================================================//
@@ -184,114 +182,55 @@ void set_temp() {
   
   delay(500);
   int gap;
-  int overshoot_correction = 0;
-  boolean heat_state = 1;
+  int distance = 0;
+  int temp_cutoff;
+  
   long previousMillis = 0;
   long interval = 150;
-  long heat_on = 3000;
-  long heat_off = 5000;
+
+  distance = temp_set - temp_read();
+  gap = (.00407913 * (distance) * (distance)) - (.33058644 * distance) + 10.87525951;
+  temp_cutoff = gap + temp_read();
+  
+  Serial.print("Distance:");
+  Serial.print(distance);
+  Serial.print(" F\n");
+  Serial.print("Cutoff:");
+  Serial.print(temp_cutoff);
+  Serial.print(" F\n");
   
   boolean preheating = 1;
   boolean heat_var = 1;
+  
+  
+  
   x = 1;
   while(x==1){
     
 //================================================== Adaptive Tuning =====================================================//
-gap = temp_set - temp_read(); 
-unsigned long currentMillis = millis();
-
-if (preheating == 1) {
-  if (temp_read() > temp_set) {
-    digitalWrite(RELAY_PIN, LOW);
-  }
-  else {
-    if (gap > 60) {
+  
+  if (preheating == 1) {
+    if (temp_read() > temp_cutoff) {
+      digitalWrite(RELAY_PIN, LOW);
+      if (temp_read() > (temp_set - 5)) {
+        preheating = 0;
+      }
+    }
+    else {
       digitalWrite(RELAY_PIN, HIGH);
     }
-    else  {
-      if ((gap < 60) && (gap > 20)) {
-        heat_on = 3000;
-        heat_off = 5000;
-      }
-      else if ((gap < 20) && (gap > 5)) {
-        heat_on = 1000;
-        heat_off = 5000;
-      }
-      else if (gap < 5) {
-        heat_on = 500;
-        heat_off = 10000;
-        preheating = false;
-      }
-      if(currentMillis - previousMillis > heat_on) {
-        previousMillis = currentMillis; 
-        digitalWrite(RELAY_PIN, HIGH);    
-      }
-      else {
-        digitalWrite(RELAY_PIN, LOW);
-      }
-    }
-  }
-}
-else {
-  if (temp_read() > temp_set) {
-    digitalWrite(RELAY_PIN, LOW);
   }
   else {
-    digitalWrite(RELAY_PIN, HIGH);
-  }
-}
+    if (temp_read() > temp_set) {
+      digitalWrite(RELAY_PIN, LOW);
+    }
+    else {
+      digitalWrite(RELAY_PIN, HIGH);
+    }
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-  
-  
-if (temp_read() > temp_set) {
-  digitalWrite(RELAY_PIN, LOW);
-}
-else {
-  
     
   }
-
-    
-    
-    
     
     lcd.clear();
     lcd.setCursor(0,0);
@@ -320,7 +259,7 @@ else {
   }
 }
 
-//================================================== Set Temp =====================================================//
+//================================================== Temp On =====================================================//
 
 void temp_on() {
   x = 1;
