@@ -1,10 +1,10 @@
 /*
   Reflow_Oven
-  
+  by Taylor Daniska
+
   v2.2
 
-  created 10 May 2016
-  by Taylor Daniska
+  updated 16 May 2016
  */
 
 #include <Wire.h>
@@ -21,15 +21,6 @@
 #define CONFIRM_BUTTON_PIN  2
 #define ESCAPE_BUTTON_PIN   3
 #define RELAY_PIN           7
-
-double Setpoint, Input, Output;
-
-//Define the aggressive and conservative Tuning Parameters
-double aggKp=4, aggKi=0.2, aggKd=1;
-double consKp=1, consKi=0.05, consKd=0.25;
-
-//Specify the links and initial tuning parameters
-PID myPID(&Input, &Output, &Setpoint, consKp, consKi, consKd, DIRECT);
 
 int WindowSize = 5000;
 unsigned long windowStartTime;
@@ -83,8 +74,6 @@ void setup(){
   mem=menu.freeRam();
   
   menu.begin(&lcd,16,2);
-  
-   
 
   r=menu.addMenu(MW_ROOT,NULL,F("Main Menu"));          
 
@@ -137,16 +126,12 @@ void setup(){
   menu.navButtons(UP_BUTTON_PIN,DOWN_BUTTON_PIN,ESCAPE_BUTTON_PIN,CONFIRM_BUTTON_PIN);
   
   menu.readEeprom();
-  
-
-  
  }
 
 //================================================== Main Loop =====================================================//
 
 void loop(){
   menu.draw(); 
-
   }
  
 //================================================== Save Var =====================================================//
@@ -202,8 +187,6 @@ void set_temp() {
   boolean preheating = 1;
   boolean heat_var = 1;
   
-  
-  
   x = 1;
   while(x==1){
     
@@ -227,9 +210,6 @@ void set_temp() {
     else {
       digitalWrite(RELAY_PIN, HIGH);
     }
-    
-    
-    
   }
     
     lcd.clear();
@@ -254,7 +234,6 @@ void set_temp() {
       delay(1000);
       return;
     } 
-    //heat(temp_set);
     delay(90);
   }
 }
@@ -305,11 +284,7 @@ else {
   
     digitalWrite(RELAY_PIN, HIGH);
   }
-
-    
-    
-    
-    
+  
     lcd.clear();
     lcd.setCursor(0,0);
     lcd.print("Set Temp");
@@ -474,45 +449,22 @@ void get_temp() {
   delay(500);
   x = 1;
   while(x==1){
-    
-    
-    
-    
-    
-    
     unsigned long currentMillis = millis();
  
-  if(currentMillis - previousMillis > interval) {
-     
-    previousMillis = currentMillis;   
-
-    temperature = thermocouple.readFahrenheit();
-    
-    delay(500);
-    
-    lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print("Temperature");
-    lcd.setCursor(0,1);
-    lcd.print(temperature);
-    lcd.print("F");
-  }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    if(currentMillis - previousMillis > interval) {
+      previousMillis = currentMillis;   
+      temperature = thermocouple.readFahrenheit();
+      delay(500);
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Temperature");
+      lcd.setCursor(0,1);
+      lcd.print(temperature);
+      lcd.print("F");
+    }
     if ((digitalRead(buttonPinok) == 0) || (digitalRead(buttonPinback) == 0)){
       x = 0;
     }
-    
   }
  delay(500); 
 }
@@ -533,6 +485,5 @@ void show(){
     }
     delay(90);
   }
- delay(500);  
-  
+ delay(500);
 }
