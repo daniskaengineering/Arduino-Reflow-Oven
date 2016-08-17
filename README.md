@@ -2,7 +2,7 @@
 Firmware for a solder reflow oven using an AVR or Arduino. Has 5 input buttons and and I2C LCD screen. Output is the heater relay. 
 
 ## Installation
-Arduino or AVR Dude can be used to load the code onto the AVR.
+Arduino or AVR Dude can be used to load the code onto the AVR. ATMega8 is used for development.
 
 ## Usage
 Can be used with a toaster oven to create a solder reflow oven with reflow curves.
@@ -19,7 +19,7 @@ v2.2 Fixed adaptive tuning
 
 v2.1 Added adaptive tuning to temp_set routine
 
-v2.0 Complete firmware redesign
+v2.0 Scraped project and restarted after hardware redesign
 
 v1.0 Initial Release
 
