@@ -25,4 +25,4 @@ v1.0 Initial Release
 
 ## Credits
 Taylor Daniska
-taylordaniska@gmail.com
+taylor@daniskaengineering.com
